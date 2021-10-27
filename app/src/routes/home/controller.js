@@ -57,8 +57,6 @@ const process = {
         // return res.json(response);
     },
     boardwrite: (req, res) => {
-        console.log("board write");
-        const boardlists = BoardList.getBoardLists("num", "title", "writer", "date");
         const newItem = {
             num: req.body.num,
             title: req.body.title,
@@ -66,14 +64,43 @@ const process = {
             date: new Date()
         };
 
-        console.log(newItem);
         res.json(newItem);
     },
     boardedit:(req, res) => {
+        const id = BoardList.getBoardInfo(req.params.id);
+        const editItem = {
+            num: id.num,
+            title: id.title,
+            writer: id.writer,
+            date: new Date()
+        };
 
+        res.json(editItem);
     },
     boarddelete: (req, res) => {
-        
+        const id = req.params.id;
+        const boardlists = BoardList.getBoardLists("num", "title", "writer", "date");
+        const content = BoardList.getBoardInfo(req.params.id);
+        console.log(content);
+
+        console.log(boardlists);
+        if(content.writer === id) {
+            const idx = boardlists.writer.indexOf(id);
+            console.log(boardlists);
+            boardlists.num.splice(idx, 1);
+            boardlists.title.splice(idx, 1);
+            boardlists.writer.splice(idx, 1);
+            boardlists.date.splice(idx, 1);
+            console.log(boardlists);
+        }
+        else{
+            response.success = false;
+            response.msg = "해당 게시물을 삭제할 수 없습니다.";
+        }
+
+        const response = {};
+        response.success = true;
+        res.json(response);
     }
 }
 
