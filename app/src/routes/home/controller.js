@@ -1,19 +1,21 @@
 "use strict";
 
 const User = require("../../models/User");
+const BoardList = require("../../models/BoardList");
+const { response } = require("express");
 
 const view = {
     main: (req, res) => {
         // 기능
-        res.render("home/index");
+        // res.render("home/index");
+        const boardlists = BoardList.getBoardLists("num", "title", "writer", "date");
+        const response = { boardlists };
+        response.success = true;
+        return res.json(response);
     },
     
     login: (req, res) => {
         res.render("home/login");
-    },
-
-    boardwrite: (req, res) => {
-        res.render("home/boardwrite");
     },
 
     boardcontent: (req, res) => {
@@ -22,7 +24,8 @@ const view = {
     
     boardedit: (req, res) => {
         res.render("home/boardedit");
-    }
+    },
+    
 };
 
 const process = {
@@ -52,6 +55,25 @@ const process = {
         // response.success = false;
         // response.msg = "로그인에 실패하였습니다."
         // return res.json(response);
+    },
+    boardwrite: (req, res) => {
+        console.log("board write");
+        const boardlists = BoardList.getBoardLists("num", "title", "writer", "date");
+        const newItem = {
+            num: req.body.num,
+            title: req.body.title,
+            writer: req.body.writer,
+            date: new Date()
+        };
+
+        console.log(newItem);
+        res.json(newItem);
+    },
+    boardedit:(req, res) => {
+
+    },
+    boarddelete: (req, res) => {
+        
     }
 }
 
